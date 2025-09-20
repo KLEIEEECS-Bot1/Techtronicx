@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Price Alert Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="antialiased">
+
+    <div id="auth-container" class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md mx-auto bg-gray-800 rounded-2xl shadow-xl overflow-hidden p-8">
+            <div class="text-center mb-8">
+                <i class="fas fa-chart-line fa-3x mb-4 text-blue-400"></i>
+                <h2 id="auth-title" class="text-3xl font-bold text-white"></h2>
+                <p id="auth-subtitle" class="text-gray-400 mt-2"></p>
+            </div>
+            <div>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-300">Email</label>
+                <input type="email" id="email" class="w-full p-3 rounded-lg input-field focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="you@example.com">
+            </div>
+            <div class="mt-4">
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-300">Password</label>
+                <input type="password" id="password" class="w-full p-3 rounded-lg input-field focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="•••••••• (min. 6 characters)">
+            </div>
+            <div id="confirm-password-container" class="mt-4 hidden">
+                <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-300">Confirm Password</label>
+                <input type="password" id="confirm-password" class="w-full p-3 rounded-lg input-field focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="••••••••">
+            </div>
+            <p id="auth-error" class="text-red-500 text-sm text-center h-4 mt-4"></p>
+            
+            <div class="mt-6">
+                <button id="primary-auth-btn" class="w-full text-white font-bold py-3 px-4 rounded-lg btn-primary"></button>
+            </div>
+
+            <div class="text-center mt-6">
+                <span id="auth-toggle-text" class="text-gray-400"></span>
+                <button id="auth-toggle-btn" class="text-blue-400 hover:underline cursor-pointer"></button>
+            </div>
+
+             <div class="text-center mt-4 border-t border-gray-700 pt-4">
+                <button id="guest-btn" class="text-gray-400 hover:text-white">Or Continue as Guest</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container" class="hidden">
+        <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+            <header class="text-center mb-8">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="text-left text-sm text-gray-400">Logged in as: <span id="user-email" class="font-medium text-gray-200"></span></div>
+                    <button id="logout-btn" class="text-gray-400 hover:text-white text-sm"><i class="fas fa-sign-out-alt mr-1"></i>Logout</button>
+                </div>
+                <h1 class="text-4xl font-bold text-white">Crypto Price Alert Assistant</h1>
+                <p class="text-gray-400 mt-2">Monitor your favorite cryptocurrencies and get alerts in real-time.</p>
+            </header>
+
+            <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card space-y-6">
+                    <h2 class="text-2xl font-semibold border-b border-gray-600 pb-3"><i class="fas fa-bell mr-2"></i>Create an Alert</h2>
+                    
+                    <div>
+                        <label for="crypto-search" class="block mb-2 text-sm font-medium text-gray-300">Cryptocurrency</label>
+                        <div class="relative mb-2">
+                           <input type="text" id="crypto-search" placeholder="Search (e.g., Bitcoin, BTC)" class="w-full p-3 rounded-lg input-field focus:ring-2 focus:ring-blue-500 focus:outline-none pl-4 pr-10">
+                           <i class="fas fa-search absolute right-3.5 top-3.5 text-gray-400"></i>
+                        </div>
+                        <select id="crypto-select" class="w-full p-3 rounded-lg input-field focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            </select>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <div id="crypto-icon-price" class="flex items-center">
+                            </div>
+                    </div>
+
+                    <div>
+                        <label for="price-threshold" class="block mb-2 text-sm font-medium text-gray-300">Alert me when price is...</label>
+                        <div class="flex">
+                             <select id="alert-condition" class="p-3 rounded-l-lg input-field focus:ring-2 focus:ring-blue-500 focus:outline-none border-r border-gray-500">
+                                <option value="above">Above</option>
+                                <option value="below">Below</option>
+                            </select>
+                            <span class="inline-flex items-center px-3 text-sm text-gray-300 bg-gray-700 border-t border-b border-gray-600">$</span>
+                            <input type="number" id="price-threshold" placeholder="e.g., 50000" class="w-full p-3 rounded-r-lg input-field focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <button id="add-alert-btn" class="w-full text-white font-bold py-3 px-4 rounded-lg btn-primary flex items-center justify-center">
+                        <i class="fas fa-plus-circle mr-2"></i>Add Alert
+                    </button>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="card">
+                        <h2 class="text-2xl font-semibold mb-4 border-b border-gray-600 pb-3"><i class="fas fa-list-ul mr-2"></i>Active Alerts</h2>
+                        <div id="active-alerts-list" class="space-y-4 max-h-60 overflow-y-auto">
+                            <p class="text-gray-400 text-center">No active alerts. Add one to get started!</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="text-2xl font-semibold mb-4 border-b border-gray-600 pb-3"><i class="fas fa-history mr-2"></i>Triggered Alerts</h2>
+                        <div id="notifications-list" class="space-y-3 max-h-48 overflow-y-auto">
+                             <p class="text-gray-400 text-center">No triggered alerts yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <div id="toast" class="fixed top-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg hidden">
+        <p>Toast message!</p>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
